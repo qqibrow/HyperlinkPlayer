@@ -11,6 +11,7 @@ public:
 	Section(std::string videoName, std::string metaName);
 	Video getVideo()  { return video; };
 	std::vector<QRect> getAllAreas( int frameNo );
+	const HyperLink& getHyperLink(int i);
 	void resume();
 	~Section();
 protected:

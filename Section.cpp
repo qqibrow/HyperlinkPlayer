@@ -56,3 +56,8 @@ void Section::resume()
 	this->video.goToframeNo(0);
 	//throw std::exception("The method or operation is not implemented.");
 }
+
+const HyperLink& Section::getHyperLink( int i )
+{
+	return hyperlinkVector[i];
+}

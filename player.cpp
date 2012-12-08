@@ -4,6 +4,7 @@
 #include <QPainter>
 #include <QImage>
 #include <assert.h>
+#include "../src/gui/dialogs/qfiledialog.h"
 
 using namespace std;
 
@@ -12,6 +13,7 @@ Player::Player(QWidget *parent, Qt::WFlags flags)
 {
 	ui.setupUi(this);
 	//init colors
+	ui.label->setMouseTracking(true);
 	colors = ColorFactory::getListofColors();
 	
 	connect(ui.loadBn, SIGNAL(clicked()), this, SLOT(loadBnClicked()));
@@ -34,16 +36,16 @@ Player::~Player()
 
 void Player::loadBnClicked()
 {
-	string videoName = "prison.rgb";
-	string metaName = "a.txt";
+	QString videoName = QFileDialog::getOpenFileName(this, tr("Open File"),
+		"/",tr("Images (*.rgb)"));
 
-	SectionList.push_back(Section(videoName, metaName));
-	cur = SectionList.end();
-	--cur;
-	//draw the frame
-	//drawFrame(40);
-	// do I need to deractivate  the loadBn?
+	if(videoName != "")
+	{
+		loadHyperlinkVideo(videoName);
+
+	}
 }
+
 
 void Player::backBnClicked()
 {
@@ -105,8 +107,9 @@ void Player::videoSliderClicked()
 
 void Player::DrawHyperlinkImage( QImage& back, int frame )
 {
-	//areas's size should be the size of the hyperlinks
-	vector<QRect> areas = cur->getAllAreas(frame);
+	//areas' size should be the size of the hyperlinks
+	areas.clear();
+	areas = cur->getAllAreas(frame);
 	for(int i = 0; i < areas.size(); i++)
 	{
 		if(!areas[i].isNull())
@@ -152,4 +155,31 @@ void Player::update()
 	drawFrame(value);
 
 }
+
+void Player::mousePressEvent( QMouseEvent * event )
+{
+	QPoint p = event->pos() - ui.label->pos();
+// 	vector<QRect> areas = cur->getAllAreas(frame);
+	for(int i = 0; i < areas.size(); i++)
+	{
+		if(!areas[i].isNull() && areas[i].contains(p))
+		{
+			loadHyperlinkVideo(QString(cur->getHyperLink(i).getSecondaryVideoName().c_str()));
+			setSlider(cur->getVideo().getTotalFrames());
+			ui.videoSlider->setValue(cur->getHyperLink(i).getSecondaryVideoStartFrame());
+			playBnClicked();
+		}
+	}
+	
+}
+
+void Player::loadHyperlinkVideo( QString &videoName )
+{
+	std::string utf8_text = videoName.toUtf8().constData();
+	string metaName = utf8_text + ".meta";
+	SectionList.push_back(Section(utf8_text, metaName));
+	cur = SectionList.end();
+	--cur;
+}
+
 

@@ -1,6 +1,6 @@
 #include "player.h"
 #include <QtGui/QApplication>
-
+#include <fstream>
 
 
 int main(int argc, char *argv[])
