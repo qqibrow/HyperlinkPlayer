@@ -5,24 +5,23 @@
 #include "../qtHelloWorld/Video.h"
 #include <string>
 #include <QRect>
+#include <phonon/MediaSource>
+
 class Section
 {
 public:	
-	Section(std::string videoName, std::string metaName);
+	Section(std::string videoName, std::string metaName, std::string audioName);
 	Video& getVideo()  { return video; };
 	std::vector<QRect> getAllAreas( int frameNo );
 	const HyperLink& getHyperLink(int i);
 	void resume();
-	int getLastPlayedLocation() const { return lastPlayedLocation; }
-	void setLastPlayedLocation(int val) { lastPlayedLocation = val; }
+	Phonon::MediaSource& getAudioSource();
 	~Section();
-protected:
 private:
 	Section();	
 	std::vector<HyperLink> hyperlinkVector;
 	Video video;
-	int lastPlayedLocation;
-	
+	Phonon::MediaSource source;	
 
 	//	int currentFrame;
 

@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Section::Section( std::string videoName, std::string metaName ):video(videoName)
+Section::Section( std::string videoName, std::string metaName, std::string audioName):video(videoName),source(audioName.c_str())
 {
 	// may be not a goo idea to read file in the construction method
 	ifstream fin(metaName);
@@ -51,4 +51,9 @@ void Section::resume()
 const HyperLink& Section::getHyperLink( int i )
 {
 	return hyperlinkVector[i];
+}
+
+Phonon::MediaSource& Section::getAudioSource()
+{
+	return source;
 }
