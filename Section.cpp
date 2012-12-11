@@ -8,13 +8,17 @@ Section::Section( std::string videoName, std::string metaName, std::string audio
 {
 	// may be not a goo idea to read file in the construction method
 	ifstream fin(metaName);
-	assert(fin.peek() != EOF && "file doesn't exist ");
-	HyperLink link;
-	while(fin>>link)
+	if(fin.peek() != EOF)
 	{
-	/*	fin>>link;*/
-		hyperlinkVector.push_back(link);
+		HyperLink link;
+		while(fin>>link)
+		{			
+			hyperlinkVector.push_back(link);
+
+		}
 	}
+	//assert(fin.peek() != EOF && "file doesn't exist ");
+
 }
 
 
@@ -32,7 +36,11 @@ Section::~Section()
 
 vector<QRect> Section::getAllAreas( int frameNo )
 {
+
 	vector<QRect> rectVector;
+	if(hyperlinkVector.empty())
+		return rectVector;
+
 	for(int i = 0; i < hyperlinkVector.size(); i++)
 	{
 		//check every hyperlink
@@ -50,6 +58,7 @@ void Section::resume()
 
 const HyperLink& Section::getHyperLink( int i )
 {
+	assert( !hyperlinkVector.empty() && i >= 0 && i < hyperlinkVector.size());
 	return hyperlinkVector[i];
 }
 

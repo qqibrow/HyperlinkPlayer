@@ -84,6 +84,10 @@ void Player::loadBnClicked()
 
 	if(videoName != "")
 	{
+		if (!this->SectionList.empty())
+		{
+			SectionList.clear();
+		}
 		loadHyperlinkVideo(videoName);
 		showQmessageBox("load successfully");
 		ui.pauseBn->setDisabled(false);
@@ -152,6 +156,10 @@ void Player::DrawHyperlinkImage( QImage& back, int frame )
 	//areas' size should be the size of the hyperlinks
 	areas.clear();
 	areas = cur->getAllAreas(frame);
+	if (areas.empty())
+	{
+		return;
+	}
 	for(int i = 0; i < areas.size(); i++)
 	{
 		if(!areas[i].isNull())
@@ -197,8 +205,8 @@ void Player::mousePressEvent( QMouseEvent * event )
 
 // 			if(cur->getVideo().getVideoName() != cur->getHyperLink(i).getSecondaryVideoName())
 // 			{
-				loadHyperlinkVideo(QString(cur->getHyperLink(i).getSecondaryVideoName().c_str()));
 				int secondaryVideoStartFrame = cur->getHyperLink(i).getSecondaryVideoStartFrame();
+				loadHyperlinkVideo(QString(cur->getHyperLink(i).getSecondaryVideoName().c_str()));				
 				toFrame = secondaryVideoStartFrame*1000/freq;
 			//	mediaObject->play();
 				//emit seekTo(toFrame);
